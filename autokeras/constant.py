@@ -89,6 +89,7 @@ class Constant:
     # Image Resize
 
     MAX_IMAGE_SIZE = 128 * 128
+    DEFAULT_RESIZE_SHAPE = (128, 128)
 
     # SYS Constant
 
