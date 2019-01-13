@@ -102,8 +102,7 @@ class ImageSupervised(DeepSupervised, ABC):
             print("Preprocessing the images.")
 
         self.resize_shape = compute_image_resize_params(x)
-
-        x = resize_image_data(x, self.resize_shape)
+        x = self.preprocess(x)
 
         if self.verbose:
             print("Preprocessing finished.")
