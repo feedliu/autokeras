@@ -198,13 +198,13 @@ def verbose_print(new_father_id, new_graph, new_model_id):
 
 def validate_xy(x_train, y_train):
     """Validate `x_train`'s type and the shape of `x_train`, `y_train`."""
-    try:
-        x_train = x_train.astype('float64')
-    except ValueError:
-        raise ValueError('x_train should only contain numerical data.')
+    #try:
+    #    x_train = x_train.astype('float64')
+    #except ValueError:
+    #    raise ValueError('x_train should only contain numerical data.')
 
-    if len(x_train.shape) < 2:
-        raise ValueError('x_train should at least has 2 dimensions.')
+    #if len(x_train.shape) < 2:
+    #    raise ValueError('x_train should at least has 2 dimensions.')
 
     if x_train.shape[0] != y_train.shape[0]:
         raise ValueError('x_train and y_train should have the same number of instances.')
