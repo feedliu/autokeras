@@ -76,7 +76,7 @@ class ImageSupervised(DeepSupervised, ABC):
         resize_width: resize image width.
     """
 
-    def __init__(self, augment=None, **kwargs):
+    def __init__(self, augment=None, resize_shape=None, **kwargs):
         """Initialize the instance.
         The classifier will be loaded from the files in 'path' if parameter 'resume' is True.
         Otherwise it would create a new one.
@@ -90,8 +90,7 @@ class ImageSupervised(DeepSupervised, ABC):
                 will use the value of Constant.DATA_AUGMENTATION which is True by default.
         """
         self.augment = augment if augment is not None else Constant.DATA_AUGMENTATION
-        self.resize_shape = []
-
+        self.resize_shape = resize_shape
         super().__init__(**kwargs)
 
     def fit(self, x, y, time_limit=None):
@@ -101,7 +100,6 @@ class ImageSupervised(DeepSupervised, ABC):
         if self.verbose:
             print("Preprocessing the images.")
 
-        self.resize_shape = compute_image_resize_params(x)
         x = self.preprocess(x)
 
         if self.verbose:
@@ -114,7 +112,18 @@ class ImageSupervised(DeepSupervised, ABC):
             self.data_transformer = ImageDataTransformer(x, augment=self.augment)
 
     def preprocess(self, x):
-        return resize_image_data(x, self.resize_shape)
+        if len(x) == 0:
+            print("x_train or x_test is empty.")
+            sys.exit(1)
+        else:
+            if isinstance(x[0], str):
+                self.resize_shape = self.resize_shape if self.resize_shape is not None else Constant.DEFAULT_RESIZE_SHAPE
+            elif isinstance(x[0], np.ndarray):
+                self.resize_shape = compute_image_resize_params(x)
+                x = resize_image_data(x, self.resize_shape)
+            else:
+                raise ValueError('x_train or x_test just supports string and numpy.ndarray type now.')
+        return x
 
 
 class ImageClassifier(ImageSupervised):
